@@ -13,6 +13,13 @@ app.all('/', (req, res, next) => {
   });
 });
 app.use('/jobs', jobsRouter);
+// errors
+app.use((err, req, res, next) => {
+  res.json({
+    status: 500,
+    msg: 'error',
+  });
+});
 
 app.listen(port, () => {
   console.log('server started');
