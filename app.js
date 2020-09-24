@@ -1,6 +1,5 @@
 const express = require('express');
 const app = express();
-const port = process.env.PORT || 3000;
 require('dotenv').config();
 // Routers
 const jobsRouter = require('./routes/jobs-router.js');
@@ -19,10 +18,6 @@ app.use((err, req, res, next) => {
     status: 500,
     msg: 'error',
   });
-});
-
-app.listen(port, () => {
-  console.log('server started');
 });
 
 module.exports = app;
