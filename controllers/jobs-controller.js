@@ -1,7 +1,19 @@
-const { selectJobs, selectJobById } = require('../models/job-models');
+const { selectJobs, selectJobById, selectJobsByTerm } = require('../models/job-models');
 
 exports.getJobs = async (req, res, next) => {
   const data = await selectJobs();
+  if (data instanceof Error) {
+    return next(data);
+  }
+  return res.json({
+    status: 200,
+    jobs: data,
+  });
+};
+
+exports.getJobsByTerm = async (req, res, next) => {
+  const { searchTerm } = req.params;
+  const data = await selectJobsByTerm(searchTerm);
   if (data instanceof Error) {
     return next(data);
   }

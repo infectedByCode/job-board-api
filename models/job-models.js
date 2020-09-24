@@ -12,6 +12,18 @@ exports.selectJobs = () => {
     });
 };
 
+exports.selectJobsByTerm = (searchTerm) => {
+  return db
+    .promise()
+    .query('SELECT * FROM jobs WHERE jobTitle LIKE ? OR jobText LIKE ?', [`%${searchTerm}%`, `%${searchTerm}%`])
+    .then(([rows]) => {
+      return rows;
+    })
+    .catch((err) => {
+      return err;
+    });
+};
+
 exports.selectJobById = (jobId) => {
   return db
     .promise()
