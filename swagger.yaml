@@ -7,4 +7,12 @@ paths:
     get:
       summary: Health checker route
       description: >
-        Route to indicate whether the API is workingget
+        Route to indicate whether the API is working
+  /jobs:
+    get:
+      summary: Fetchs all jobs
+      description: Fetches all information for jobs
+  /jobs/:jobId:
+    get:
+      summary: Fetches job by ID
+      description: Fethcing all information relating to a specific job
