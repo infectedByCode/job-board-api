@@ -15,7 +15,7 @@ exports.selectJobs = () => {
 exports.selectJobById = (jobId) => {
   return db
     .promise()
-    .query('SELECT jobTitle AS title FROM jobs WHERE jobId = ?', [jobId])
+    .query('SELECT * FROM jobs WHERE jobId = ?', [jobId])
     .then(([rows]) => {
       return rows;
     })
