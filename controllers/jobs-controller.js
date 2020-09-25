@@ -1,4 +1,4 @@
-const { selectJobs, selectJobById, selectJobsByTerm } = require('../models/job-models');
+const { selectJobs, selectJobById, selectJobsByTerm, selectJobsByCompanyId } = require('../models/job-models');
 
 exports.getJobs = async (req, res, next) => {
   const data = await selectJobs();
@@ -14,6 +14,18 @@ exports.getJobs = async (req, res, next) => {
 exports.getJobsByTerm = async (req, res, next) => {
   const { searchTerm } = req.params;
   const data = await selectJobsByTerm(searchTerm);
+  if (data instanceof Error) {
+    return next(data);
+  }
+  return res.json({
+    status: 200,
+    jobs: data,
+  });
+};
+
+exports.getJobsByCompanyId = async (req, res, next) => {
+  const { companyId } = req.params;
+  const data = await selectJobsByCompanyId(companyId);
   if (data instanceof Error) {
     return next(data);
   }

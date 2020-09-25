@@ -79,5 +79,19 @@ describe('#app', () => {
           });
       });
     });
+    describe('/comapny/:companyId', () => {
+      it('returns an array of jobs for a given companyId', () => {
+        const companyId = '8888-8888-8888-8888-8888-8888-888888';
+        return request(app)
+          .get(`/jobs/company/${companyId}`)
+          .expect(200)
+          .then(({ body: { jobs } }) => {
+            assert.typeOf(jobs, 'array');
+            jobs.forEach((j) => {
+              assert.ok(j.companyId === companyId);
+            });
+          });
+      });
+    });
   });
 });

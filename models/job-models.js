@@ -24,6 +24,18 @@ exports.selectJobsByTerm = (searchTerm) => {
     });
 };
 
+exports.selectJobsByCompanyId = (companyId) => {
+  return db
+    .promise()
+    .query('SELECT * FROM jobs WHERE companyId = ?', [companyId])
+    .then(([rows]) => {
+      return rows;
+    })
+    .catch((err) => {
+      return err;
+    });
+};
+
 exports.selectJobById = (jobId) => {
   return db
     .promise()
