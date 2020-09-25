@@ -12,7 +12,7 @@ const agent = request.agent(app);
 describe('#app', () => {
   // TODO: reset all db
   beforeEach(() => {});
-  after(() => db.destroy());
+  after(() => db.end());
   describe('/jobs', () => {
     it('GET:200, returns an array of jobs with correct keys', () => {
       return request(app)
@@ -53,6 +53,29 @@ describe('#app', () => {
               'createdAt',
               'companyId',
             ]);
+          });
+      });
+    });
+    describe('/search/:searchTerm', () => {
+      it('returns an array of jobs matching the search term in the title or text', () => {
+        return request(app)
+          .get('/jobs/search/sample')
+          .expect(200)
+          .then(({ body: { jobs } }) => {
+            assert.typeOf(jobs, 'array');
+            jobs.forEach((j) => {
+              assert.hasAllKeys(j, [
+                'jobId',
+                'jobTitle',
+                'jobText',
+                'salary',
+                'tags',
+                'closingDate',
+                'applyEmail',
+                'createdAt',
+                'companyId',
+              ]);
+            });
           });
       });
     });
