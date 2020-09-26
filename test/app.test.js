@@ -35,6 +35,24 @@ describe('#app', () => {
           });
         });
     });
+    it('POST:201, returns a job reference if posted successfully', () => {
+      const jobData = {
+        jobTitle: 'developer',
+        jobText: 'require 200 years experience',
+        salary: 9000,
+        applyEmail: 'company@companyemail.com',
+        closingDate: '2020-10-01',
+        tags: 'developer,full-stack,nodejs',
+        companyId: '8888-8888-8888-8888-8888-8888-888888',
+      };
+      return request(app)
+        .post('/jobs')
+        .send(jobData)
+        .expect(201)
+        .then(({ body }) => {
+          assert.hasAllKeys(body, ['status', 'msg', 'ref']);
+        });
+    });
     describe('/:jobId', () => {
       it('GET:200, returns a single job with correct keys', () => {
         return request(app)

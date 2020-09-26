@@ -1,4 +1,10 @@
-const { selectJobs, selectJobById, selectJobsByTerm, selectJobsByCompanyId } = require('../models/job-models');
+const {
+  selectJobs,
+  insertJob,
+  selectJobById,
+  selectJobsByTerm,
+  selectJobsByCompanyId,
+} = require('../models/job-models');
 
 exports.getJobs = async (req, res, next) => {
   const data = await selectJobs();
@@ -9,6 +15,20 @@ exports.getJobs = async (req, res, next) => {
     status: 200,
     jobs: data,
   });
+};
+
+exports.postJob = async (req, res, next) => {
+  const data = await insertJob(req.body);
+  if (data instanceof Error) {
+    return next(data);
+  }
+  if (data.affectedRows === 1) {
+    return res.status(201).json({
+      status: 201,
+      msg: 'job created successfully',
+      ref: data.jobId,
+    });
+  }
 };
 
 exports.getJobsByTerm = async (req, res, next) => {

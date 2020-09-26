@@ -1,4 +1,5 @@
 const db = require('../db/connection');
+const { v4: uuidv4 } = require('uuid');
 
 exports.selectJobs = () => {
   return db
@@ -10,6 +11,19 @@ exports.selectJobs = () => {
     .catch((err) => {
       return err;
     });
+};
+
+exports.insertJob = (body) => {
+  const jobId = uuidv4();
+  const { jobTitle, jobText, salary, applyEmail, closingDate, tags, companyId } = body;
+  return db
+    .promise()
+    .query('INSERT INTO jobs SET ?;', { jobId, jobTitle, jobText, salary, applyEmail, closingDate, tags, companyId })
+    .then(([result]) => {
+      result.jobId = jobId;
+      return result;
+    })
+    .catch((err) => err);
 };
 
 exports.selectJobsByTerm = (searchTerms) => {
