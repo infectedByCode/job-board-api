@@ -13,7 +13,8 @@ exports.getJobs = async (req, res, next) => {
 
 exports.getJobsByTerm = async (req, res, next) => {
   const { searchTerm } = req.params;
-  const data = await selectJobsByTerm(searchTerm);
+  const searchList = searchTerm.split('+');
+  const data = await selectJobsByTerm(searchList);
   if (data instanceof Error) {
     return next(data);
   }

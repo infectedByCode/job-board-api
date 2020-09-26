@@ -12,10 +12,20 @@ exports.selectJobs = () => {
     });
 };
 
-exports.selectJobsByTerm = (searchTerm) => {
+exports.selectJobsByTerm = (searchTerms) => {
+  let query = 'SELECT * FROM jobs WHERE jobTitle LIKE ? OR jobText LIKE ?';
+  const words = [`%${searchTerms[0]}%`, `%${searchTerms[0]}%`];
+  if (searchTerms.length > 1) {
+    searchTerms.forEach((x, i) => {
+      if (i !== 0) {
+        query += ' OR jobTitle LIKE ? OR jobText LIKE ?';
+        words.push(`%${searchTerms[i]}%`, `%${searchTerms[i]}%`);
+      }
+    });
+  }
   return db
     .promise()
-    .query('SELECT * FROM jobs WHERE jobTitle LIKE ? OR jobText LIKE ?', [`%${searchTerm}%`, `%${searchTerm}%`])
+    .query(query, words)
     .then(([rows]) => {
       return rows;
     })

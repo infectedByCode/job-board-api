@@ -57,13 +57,36 @@ describe('#app', () => {
       });
     });
     describe('/search/:searchTerm', () => {
-      it('returns an array of jobs matching the search term in the title or text', () => {
+      it('returns an array of jobs matching the a single search keyword in the title or text', () => {
         return request(app)
           .get('/jobs/search/sample')
           .expect(200)
           .then(({ body: { jobs } }) => {
             assert.typeOf(jobs, 'array');
             jobs.forEach((j) => {
+              assert.hasAllKeys(j, [
+                'jobId',
+                'jobTitle',
+                'jobText',
+                'salary',
+                'tags',
+                'closingDate',
+                'applyEmail',
+                'createdAt',
+                'companyId',
+              ]);
+            });
+          });
+      });
+      it('returns an array of jobs matching the any of the given search keywords', () => {
+        return request(app)
+          .get('/jobs/search/pot+sample')
+          .expect(200)
+          .then(({ body: { jobs } }) => {
+            assert.typeOf(jobs, 'array');
+            assert.ok(jobs.length > 0);
+            jobs.forEach((j) => {
+              assert.ok(j.jobTitle.includes('sample') || j.jobText.includes('sample'));
               assert.hasAllKeys(j, [
                 'jobId',
                 'jobTitle',
