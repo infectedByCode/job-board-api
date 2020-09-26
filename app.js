@@ -4,6 +4,8 @@ require('dotenv').config();
 // Routers
 const jobsRouter = require('./routes/jobs-router.js');
 
+app.use(express.json());
+
 // health checker
 app.all('/', (req, res, next) => {
   res.json({
