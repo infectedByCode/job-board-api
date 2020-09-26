@@ -11,7 +11,7 @@ exports.getJobs = async (req, res, next) => {
   if (data instanceof Error) {
     return next(data);
   }
-  return res.json({
+  return res.status(200).json({
     status: 200,
     jobs: data,
   });
@@ -38,7 +38,7 @@ exports.getJobsByTerm = async (req, res, next) => {
   if (data instanceof Error) {
     return next(data);
   }
-  return res.json({
+  return res.status(200).json({
     status: 200,
     jobs: data,
   });
@@ -50,7 +50,7 @@ exports.getJobsByCompanyId = async (req, res, next) => {
   if (data instanceof Error) {
     return next(data);
   }
-  return res.json({
+  return res.status(200).json({
     status: 200,
     jobs: data,
   });
@@ -63,12 +63,12 @@ exports.getJobById = async (req, res, next) => {
     return next(data);
   }
   if (data.length === 0) {
-    return res.json({
+    return res.status(200).json({
       status: 204,
       msg: 'No content',
     });
   }
-  return res.json({
+  return res.status(200).json({
     status: 200,
     job: data[0],
   });
