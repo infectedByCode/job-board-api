@@ -8,9 +8,7 @@ exports.selectJobs = () => {
     .then(([rows]) => {
       return rows;
     })
-    .catch((err) => {
-      return err;
-    });
+    .catch((err) => err);
 };
 
 exports.insertJob = (body) => {
@@ -43,9 +41,7 @@ exports.selectJobsByTerm = (searchTerms) => {
     .then(([rows]) => {
       return rows;
     })
-    .catch((err) => {
-      return err;
-    });
+    .catch((err) => err);
 };
 
 exports.selectJobsByCompanyId = (companyId) => {
@@ -55,9 +51,7 @@ exports.selectJobsByCompanyId = (companyId) => {
     .then(([rows]) => {
       return rows;
     })
-    .catch((err) => {
-      return err;
-    });
+    .catch((err) => err);
 };
 
 exports.selectJobById = (jobId) => {
@@ -67,9 +61,7 @@ exports.selectJobById = (jobId) => {
     .then(([rows]) => {
       return rows;
     })
-    .catch((err) => {
-      return err;
-    });
+    .catch((err) => err);
 };
 
 exports.updateJobById = (jobId, body) => {
