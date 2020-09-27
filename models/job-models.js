@@ -71,3 +71,14 @@ exports.selectJobById = (jobId) => {
       return err;
     });
 };
+
+exports.updateJobById = (jobId, body) => {
+  return db
+    .promise()
+    .query('UPDATE jobs SET ? WHERE jobId = ?', [body, jobId])
+    .then(([result]) => {
+      result.jobId = jobId;
+      return result;
+    })
+    .catch((err) => err);
+};

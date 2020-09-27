@@ -2,6 +2,7 @@ const {
   selectJobs,
   insertJob,
   selectJobById,
+  updateJobById,
   selectJobsByTerm,
   selectJobsByCompanyId,
 } = require('../models/job-models');
@@ -72,4 +73,18 @@ exports.getJobById = async (req, res, next) => {
     status: 200,
     job: data[0],
   });
+};
+
+exports.patchJobById = async (req, res, next) => {
+  const { jobId } = req.params;
+  const data = await updateJobById(jobId, req.body);
+  if (data instanceof Error) {
+    return next(data);
+  }
+  if (data.affectedRows === 1) {
+    return res.status(200).json({
+      status: 200,
+      msg: `job ${data.jobId} updated successfully`,
+    });
+  }
 };

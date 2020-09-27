@@ -31,6 +31,7 @@ describe('#app', () => {
               'applyEmail',
               'createdAt',
               'companyId',
+              'jobLocation',
             ]);
           });
         });
@@ -70,7 +71,27 @@ describe('#app', () => {
               'applyEmail',
               'createdAt',
               'companyId',
+              'jobLocation',
             ]);
+          });
+      });
+      it('PATCH:200, updates a single job by its ID', () => {
+        const data = {
+          jobTitle: 'sample randomness',
+          jobText: 'none',
+          salary: 1,
+          applyEmail: 'email@email.com',
+          closingDate: '2020-10-01',
+          tags: 'developer,full-stack,nodejs',
+          companyId: '8888-8888-8888-8888-8888-8888-888888',
+          jobLocation: 'Manchester',
+        };
+        return request(app)
+          .patch('/jobs/1234-1234-1234-1234-1234-1234-123456')
+          .send(data)
+          .expect(200)
+          .then(({ body }) => {
+            assert.hasAllKeys(body, ['status', 'msg']);
           });
       });
     });
@@ -92,6 +113,7 @@ describe('#app', () => {
                 'applyEmail',
                 'createdAt',
                 'companyId',
+                'jobLocation',
               ]);
             });
           });
@@ -115,6 +137,7 @@ describe('#app', () => {
                 'applyEmail',
                 'createdAt',
                 'companyId',
+                'jobLocation',
               ]);
             });
           });
