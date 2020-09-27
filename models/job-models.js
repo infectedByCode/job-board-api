@@ -4,7 +4,10 @@ const { v4: uuidv4 } = require('uuid');
 exports.selectJobs = () => {
   return db
     .promise()
-    .query('SELECT * FROM jobs')
+    .query(
+      `SELECT * FROM jobs
+      LEFT JOIN companies ON jobs.companyId = companies.companyId;`
+    )
     .then(([rows]) => {
       return rows;
     })
@@ -25,7 +28,9 @@ exports.insertJob = (body) => {
 };
 
 exports.selectJobsByTerm = (searchTerms) => {
-  let query = 'SELECT * FROM jobs WHERE jobTitle LIKE ? OR jobText LIKE ?';
+  let query = `SELECT * FROM jobs
+      LEFT JOIN companies ON jobs.companyId = companies.companyId
+      WHERE jobTitle LIKE ? OR jobText LIKE ?`;
   const words = [`%${searchTerms[0]}%`, `%${searchTerms[0]}%`];
   if (searchTerms.length > 1) {
     searchTerms.forEach((x, i) => {
@@ -47,7 +52,12 @@ exports.selectJobsByTerm = (searchTerms) => {
 exports.selectJobsByCompanyId = (companyId) => {
   return db
     .promise()
-    .query('SELECT * FROM jobs WHERE companyId = ?', [companyId])
+    .query(
+      `SELECT * FROM jobs
+      LEFT JOIN companies ON jobs.companyId = companies.companyId
+      WHERE jobs.companyId = ?;`,
+      [companyId]
+    )
     .then(([rows]) => {
       return rows;
     })
@@ -57,7 +67,12 @@ exports.selectJobsByCompanyId = (companyId) => {
 exports.selectJobById = (jobId) => {
   return db
     .promise()
-    .query('SELECT * FROM jobs WHERE jobId = ?', [jobId])
+    .query(
+      `SELECT * FROM jobs
+      LEFT JOIN companies ON jobs.companyId = companies.companyId 
+      WHERE jobs.jobId = ?`,
+      [jobId]
+    )
     .then(([rows]) => {
       return rows;
     })

@@ -32,6 +32,10 @@ describe('#app', () => {
               'createdAt',
               'companyId',
               'jobLocation',
+              'companyName',
+              'companyAddress',
+              'companyEmail',
+              'companyPhone',
             ]);
           });
         });
@@ -72,6 +76,10 @@ describe('#app', () => {
               'createdAt',
               'companyId',
               'jobLocation',
+              'companyName',
+              'companyAddress',
+              'companyEmail',
+              'companyPhone',
             ]);
           });
       });
@@ -114,6 +122,10 @@ describe('#app', () => {
                 'createdAt',
                 'companyId',
                 'jobLocation',
+                'companyName',
+                'companyAddress',
+                'companyEmail',
+                'companyPhone',
               ]);
             });
           });
@@ -138,6 +150,10 @@ describe('#app', () => {
                 'createdAt',
                 'companyId',
                 'jobLocation',
+                'companyName',
+                'companyAddress',
+                'companyEmail',
+                'companyPhone',
               ]);
             });
           });
