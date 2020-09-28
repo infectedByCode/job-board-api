@@ -186,5 +186,20 @@ describe('#app', () => {
           });
         });
     });
+    it('POST:201, creates a new company', () => {
+      const companyData = {
+        companyAddress: 'Pizza Shop',
+        companyEmail: 'companyZ@email.com',
+        companyName: 'Pizza-Z-a',
+        companyPhone: '01234 687 900',
+      };
+      return request(app)
+        .post('/companies')
+        .send(companyData)
+        .expect(201)
+        .then(({ body }) => {
+          assert.hasAllKeys(body, ['status', 'msg', 'ref']);
+        });
+    });
   });
 });
