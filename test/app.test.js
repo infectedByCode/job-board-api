@@ -174,4 +174,17 @@ describe('#app', () => {
       });
     });
   });
+  describe('/companies', () => {
+    it('GET:200, returns an array of companies with correct keys', () => {
+      return request(app)
+        .get('/companies')
+        .expect(200)
+        .then(({ body: { companies } }) => {
+          assert.typeOf(companies, 'array');
+          companies.forEach((c) => {
+            assert.hasAllKeys(c, ['companyAddress', 'companyEmail', 'companyId', 'companyName', 'companyPhone']);
+          });
+        });
+    });
+  });
 });
