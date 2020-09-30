@@ -47,7 +47,7 @@ describe('#app', () => {
         jobText: 'require 200 years experience',
         salary: 9000,
         applyEmail: 'company@companyemail.com',
-        closingDate: '2020-10-01',
+        closingDate: '202,010-01',
         tags: 'developer,full-stack,nodejs',
         companyId: '8888-8888-8888-8888-8888-8888-888888',
       };
@@ -208,6 +208,22 @@ describe('#app', () => {
         });
     });
     describe('/:companyId', () => {
+      it('GET:200, returns a company by ID', () => {
+        return request(app)
+          .get(`/companies/${addedCompanyId}`)
+          .expect(200)
+          .then(({ body }) => {
+            assert.hasAllKeys(body, ['status', 'company']);
+            assert.hasAllKeys(body.company, [
+              'companyAddress',
+              'companyEmail',
+              'companyId',
+              'companyName',
+              'companyPhone',
+            ]);
+            assert.ok(body.company.companyId === addedCompanyId);
+          });
+      });
       it('DELETE:204, removes a company from database and associated jobs', () => {
         return request(app).delete(`/companies/${addedCompanyId}`).expect(204);
       });

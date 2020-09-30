@@ -1,4 +1,9 @@
-const { selectCompanies, createCompany, deleteCompanyByIdQuery } = require('../models/company-models');
+const {
+  selectCompanies,
+  createCompany,
+  selectCompanyById,
+  deleteCompanyByIdQuery,
+} = require('../models/company-models');
 
 exports.getCompanies = async (req, res, next) => {
   const result = await selectCompanies();
@@ -20,6 +25,18 @@ exports.postCompany = async (req, res, next) => {
     status: 201,
     msg: 'Company successfully created',
     ref: result.companyId,
+  });
+};
+
+exports.getCompanyById = async (req, res, next) => {
+  const { companyId } = req.params;
+  const result = await selectCompanyById(companyId);
+  if (result instanceof Error) {
+    return next(result);
+  }
+  return res.status(200).json({
+    status: 200,
+    company: result[0],
   });
 };
 

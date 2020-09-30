@@ -22,6 +22,14 @@ exports.createCompany = (data) => {
     .catch((err) => err);
 };
 
+exports.selectCompanyById = (companyId) => {
+  return db
+    .promise()
+    .query('SELECT * FROM companies WHERE companyId = ? LIMIT 1;', [companyId])
+    .then(([rows]) => rows)
+    .catch((err) => err);
+};
+
 exports.deleteCompanyByIdQuery = (companyId) => {
   return db
     .promise()
