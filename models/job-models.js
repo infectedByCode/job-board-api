@@ -89,3 +89,11 @@ exports.updateJobById = (jobId, body) => {
     })
     .catch((err) => err);
 };
+
+exports.deleteJobByIdQuery = (jobId) => {
+  return db
+    .promise()
+    .query('DELETE FROM jobs WHERE jobId = ?;', [jobId])
+    .then(([result]) => result)
+    .catch((err) => err);
+};

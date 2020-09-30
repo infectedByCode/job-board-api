@@ -104,6 +104,9 @@ describe('#app', () => {
             assert.hasAllKeys(body, ['status', 'msg']);
           });
       });
+      it('DELETE:204, removes a job by ID', () => {
+        return request(app).delete(`/jobs/${addedJobId}`).expect(204);
+      });
     });
     describe('/search/:searchTerm', () => {
       it('returns an array of jobs matching the a single search keyword in the title or text', () => {

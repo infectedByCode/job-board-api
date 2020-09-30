@@ -3,6 +3,7 @@ const {
   insertJob,
   selectJobById,
   updateJobById,
+  deleteJobByIdQuery,
   selectJobsByTerm,
   selectJobsByCompanyId,
 } = require('../models/job-models');
@@ -87,4 +88,13 @@ exports.patchJobById = async (req, res, next) => {
       msg: `job ${result.jobId} updated successfully`,
     });
   }
+};
+
+exports.deleteJobById = async (req, res, next) => {
+  const { jobId } = req.params;
+  const result = await deleteJobByIdQuery(jobId);
+  if (result instanceof Error) {
+    return next(result);
+  }
+  return res.sendStatus(204);
 };
