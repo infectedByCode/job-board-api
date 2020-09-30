@@ -8,7 +8,8 @@ const db = require('../db/connection');
 const { assert } = require('chai');
 const request = require('supertest');
 const agent = request.agent(app);
-
+let addedJobId;
+let addedCompanyId;
 describe('#app', () => {
   // TODO: reset all db
   beforeEach(() => {});
@@ -56,12 +57,13 @@ describe('#app', () => {
         .expect(201)
         .then(({ body }) => {
           assert.hasAllKeys(body, ['status', 'msg', 'ref']);
+          addedJobId = body.ref;
         });
     });
     describe('/:jobId', () => {
       it('GET:200, returns a single job with correct keys', () => {
         return request(app)
-          .get('/jobs/1234-1234-1234-1234-1234-1234-123456')
+          .get(`/jobs/${addedJobId}`)
           .expect(200)
           .then(({ body: { job } }) => {
             assert.typeOf(job, 'object');
@@ -95,7 +97,7 @@ describe('#app', () => {
           jobLocation: 'Manchester',
         };
         return request(app)
-          .patch('/jobs/1234-1234-1234-1234-1234-1234-123456')
+          .patch(`/jobs/${addedJobId}`)
           .send(data)
           .expect(200)
           .then(({ body }) => {
@@ -199,7 +201,13 @@ describe('#app', () => {
         .expect(201)
         .then(({ body }) => {
           assert.hasAllKeys(body, ['status', 'msg', 'ref']);
+          addedCompanyId = body.ref;
         });
+    });
+    describe('/:companyId', () => {
+      it('DELETE:204, removes a company from database and associated jobs', () => {
+        return request(app).delete(`/companies/${addedCompanyId}`).expect(204);
+      });
     });
   });
 });

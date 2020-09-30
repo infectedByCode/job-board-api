@@ -21,3 +21,11 @@ exports.createCompany = (data) => {
     })
     .catch((err) => err);
 };
+
+exports.deleteCompanyByIdQuery = (companyId) => {
+  return db
+    .promise()
+    .query('DELETE FROM companies WHERE companyId = ?;', [companyId])
+    .then(([result]) => result)
+    .catch((err) => err);
+};
