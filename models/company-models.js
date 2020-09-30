@@ -30,6 +30,17 @@ exports.selectCompanyById = (companyId) => {
     .catch((err) => err);
 };
 
+exports.updateCompanyById = (companyId, body) => {
+  return db
+    .promise()
+    .query('UPDATE companies SET ? WHERE companyId = ?', [body, companyId])
+    .then(([result]) => {
+      result.companyId = companyId;
+      return result;
+    })
+    .catch((err) => err);
+};
+
 exports.deleteCompanyByIdQuery = (companyId) => {
   return db
     .promise()

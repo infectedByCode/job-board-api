@@ -224,6 +224,22 @@ describe('#app', () => {
             assert.ok(body.company.companyId === addedCompanyId);
           });
       });
+      it('PATCH:200, updates a single company by its ID', () => {
+        const data = {
+          companyAddress: '888 Fortune Building',
+          companyEmail: 'fortune@email.com',
+          companyName: 'Fortune 888',
+          companyPhone: '0800 888 888',
+        };
+        return request(app)
+          .patch(`/companies/${addedCompanyId}`)
+          .send(data)
+          .expect(200)
+          .then(({ body }) => {
+            assert.hasAllKeys(body, ['status', 'msg']);
+            assert.ok(body.msg === `company ${addedCompanyId} updated successfully`);
+          });
+      });
       it('DELETE:204, removes a company from database and associated jobs', () => {
         return request(app).delete(`/companies/${addedCompanyId}`).expect(204);
       });
