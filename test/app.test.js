@@ -278,6 +278,21 @@ describe('#app', () => {
             assert.ok(body.jobseeker.jobseekerId === addedJobSeekerId);
           });
       });
+      it('PATCH:200, updates a jobseeker by their ID', () => {
+        const data = {
+          jobseekerForename: 'Peter',
+          jobseekerSurname: 'Smith',
+          jobKeywords: 'developer,cleaner,office,nodejs',
+        };
+        return request(app)
+          .patch(`/jobseekers/${addedJobSeekerId}`)
+          .send(data)
+          .expect(200)
+          .then(({ body }) => {
+            assert.hasAllKeys(body, ['status', 'msg']);
+            assert.ok(body.msg === `jobseeker ${addedJobSeekerId} successfully updated`);
+          });
+      });
     });
   });
 });

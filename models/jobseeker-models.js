@@ -21,3 +21,14 @@ exports.selectJobSeekerById = (jobSeekerId) => {
     .then(([rows]) => rows)
     .catch((err) => err);
 };
+
+exports.updateJobSeekerById = (jobSeekerId, data) => {
+  return db
+    .promise()
+    .query('UPDATE jobseekers SET ? WHERE jobseekerId = ?', [data, jobSeekerId])
+    .then(([rows]) => {
+      rows.jobSeekerId = jobSeekerId;
+      return rows;
+    })
+    .catch((err) => err);
+};
