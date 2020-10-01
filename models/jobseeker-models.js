@@ -25,10 +25,18 @@ exports.selectJobSeekerById = (jobSeekerId) => {
 exports.updateJobSeekerById = (jobSeekerId, data) => {
   return db
     .promise()
-    .query('UPDATE jobseekers SET ? WHERE jobseekerId = ?', [data, jobSeekerId])
+    .query('UPDATE jobseekers SET ? WHERE jobseekerId = ?;', [data, jobSeekerId])
     .then(([rows]) => {
       rows.jobSeekerId = jobSeekerId;
       return rows;
     })
+    .catch((err) => err);
+};
+
+exports.deleteJobSeekerByIdQuery = (jobSeekerId) => {
+  return db
+    .promise()
+    .query('DELETE FROM jobseekers WHERE jobseekerId = ?;', [jobSeekerId])
+    .then(([rows]) => rows)
     .catch((err) => err);
 };

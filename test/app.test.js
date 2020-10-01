@@ -293,6 +293,9 @@ describe('#app', () => {
             assert.ok(body.msg === `jobseeker ${addedJobSeekerId} successfully updated`);
           });
       });
+      it('DELETE:204, deletes a jobseeker by their ID', () => {
+        return request(app).delete(`/jobseekers/${addedJobSeekerId}`).expect(204);
+      });
     });
   });
 });
