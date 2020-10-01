@@ -10,6 +10,7 @@ const request = require('supertest');
 const agent = request.agent(app);
 let addedJobId;
 let addedCompanyId;
+let addedJobSeekerId;
 describe('#app', () => {
   // TODO: reset all db
   beforeEach(() => {});
@@ -242,6 +243,40 @@ describe('#app', () => {
       });
       it('DELETE:204, removes a company from database and associated jobs', () => {
         return request(app).delete(`/companies/${addedCompanyId}`).expect(204);
+      });
+    });
+  });
+  describe('/jobseekers', () => {
+    it('POST:201, inserts a new jobseeker', () => {
+      const data = {
+        jobseekerForename: 'Jack',
+        jobseekerSurname: 'Jones',
+        jobKeywords: 'developer,cleaner,office',
+      };
+      return request(app)
+        .post('/jobseekers')
+        .send(data)
+        .expect(201)
+        .then(({ body }) => {
+          assert.hasAllKeys(body, ['status', 'msg', 'ref']);
+          addedJobSeekerId = body.ref;
+        });
+    });
+    describe('/:jobSeekerId', () => {
+      it('GET:200, selects jobseeker by their ID', () => {
+        return request(app)
+          .get(`/jobseekers/${addedJobSeekerId}`)
+          .then(({ body }) => {
+            assert.hasAllKeys(body, ['status', 'jobseeker']);
+            assert.hasAllKeys(body.jobseeker, [
+              'jobseekerForename',
+              'jobseekerSurname',
+              'jobKeywords',
+              'jobseekerId',
+              'accountCreated',
+            ]);
+            assert.ok(body.jobseeker.jobseekerId === addedJobSeekerId);
+          });
       });
     });
   });
