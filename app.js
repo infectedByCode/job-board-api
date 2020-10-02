@@ -5,6 +5,7 @@ require('dotenv').config();
 const jobsRouter = require('./routes/jobs-router.js');
 const companiesRouter = require('./routes/companies-router.js');
 const jobSeekersRouter = require('./routes/jobseekers-router.js');
+const applicationsRouter = require('./routes/applications-router.js');
 
 app.use(express.json());
 
@@ -19,6 +20,7 @@ app.all('/', (req, res, next) => {
 app.use('/jobs', jobsRouter);
 app.use('/companies', companiesRouter);
 app.use('/jobseekers', jobSeekersRouter);
+app.use('/applications', applicationsRouter);
 // errors
 app.use((err, req, res, next) => {
   res.json({

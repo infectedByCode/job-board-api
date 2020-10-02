@@ -298,4 +298,20 @@ describe('#app', () => {
       });
     });
   });
+  describe('/applications', () => {
+    it('POST:201, saves application', () => {
+      const data = {
+        jobId: '3dfb5aa8-43de-47ff-ab17-3db14a8c046a',
+        companyId: '57f0715c-1084-46b8-b976-e4ac2aae4576',
+        jobseekerId: 'a06d34ae-fe1c-43ed-b29d-0c4b7777b300',
+      };
+      return request(app)
+        .post('/applications')
+        .send(data)
+        .expect(200)
+        .then(({ body }) => {
+          assert.hasAllKeys(body, ['status', 'msg', 'ref']);
+        });
+    });
+  });
 });
