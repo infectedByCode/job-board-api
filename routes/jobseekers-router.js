@@ -1,12 +1,12 @@
 const jobSeekersRouter = require('express').Router();
 const {
-  insertJobSeeker,
+  postJobSeeker,
   getJobSeekerById,
   patchJobSeekerById,
   deleteJobSeekerById,
 } = require('../controllers/jobseekers-controller.js');
 
-jobSeekersRouter.route('/').post(insertJobSeeker);
+jobSeekersRouter.route('/').post(postJobSeeker);
 jobSeekersRouter.route('/:jobseekerId').get(getJobSeekerById).patch(patchJobSeekerById).delete(deleteJobSeekerById);
 
 module.exports = jobSeekersRouter;

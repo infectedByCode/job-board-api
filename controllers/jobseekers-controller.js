@@ -5,7 +5,7 @@ const {
   deleteJobSeekerByIdQuery,
 } = require('../models/jobseeker-models');
 
-exports.insertJobSeeker = async (req, res, next) => {
+exports.postJobSeeker = async (req, res, next) => {
   const result = await insertJobSeeker(req.body);
   if (result instanceof Error) {
     return next(result);
