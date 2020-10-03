@@ -313,14 +313,40 @@ describe('#app', () => {
           assert.hasAllKeys(body, ['status', 'msg', 'ref']);
         });
     });
-    describe('/:jobId', () => {
+    describe('job/:jobId', () => {
       it('GET:200, returns an array of applications for a given jobId', () => {
         const jobId = '3dfb5aa8-43de-47ff-ab17-3db14a8c046a';
         return request(app)
-          .get(`/applications/${jobId}`)
+          .get(`/applications/job/${jobId}`)
           .expect(200)
           .then(({ body }) => {
             assert.hasAllKeys(body, ['status', 'applications']);
+            assert.typeOf(body.applications, 'array');
+            body.applications.forEach((application) => {
+              assert.hasAllKeys(application, [
+                'applicationID',
+                'jobId',
+                'companyId',
+                'jobseekerId',
+                'applicationDate',
+                'closingDate',
+                'jobText',
+                'jobTitle',
+                'jobseekerForename',
+                'jobseekerSurname',
+              ]);
+            });
+          });
+      });
+    });
+    describe('company/:companyId', () => {
+      it('GET:200, returns an array of applications for a given companyId', () => {
+        const companyId = '57f0715c-1084-46b8-b976-e4ac2aae4576';
+        return request(app)
+          .get(`/applications/company/${companyId}`)
+          .expect(200)
+          .then(({ body }) => {
+            assert.hasAllKeys(body, ['status', 'applications', 'companyId']);
             assert.typeOf(body.applications, 'array');
             body.applications.forEach((application) => {
               assert.hasAllKeys(application, [
