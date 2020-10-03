@@ -308,10 +308,36 @@ describe('#app', () => {
       return request(app)
         .post('/applications')
         .send(data)
-        .expect(200)
+        .expect(201)
         .then(({ body }) => {
           assert.hasAllKeys(body, ['status', 'msg', 'ref']);
         });
+    });
+    describe('/:jobId', () => {
+      it('GET:200, returns an array of applications for a given jobId', () => {
+        const jobId = '3dfb5aa8-43de-47ff-ab17-3db14a8c046a';
+        return request(app)
+          .get(`/applications/${jobId}`)
+          .expect(200)
+          .then(({ body }) => {
+            assert.hasAllKeys(body, ['status', 'applications']);
+            assert.typeOf(body.applications, 'array');
+            body.applications.forEach((application) => {
+              assert.hasAllKeys(application, [
+                'applicationID',
+                'jobId',
+                'companyId',
+                'jobseekerId',
+                'applicationDate',
+                'closingDate',
+                'jobText',
+                'jobTitle',
+                'jobseekerForename',
+                'jobseekerSurname',
+              ]);
+            });
+          });
+      });
     });
   });
 });
