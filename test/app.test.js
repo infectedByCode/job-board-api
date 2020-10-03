@@ -365,5 +365,33 @@ describe('#app', () => {
           });
       });
     });
+    describe('jobseeker/:jobseekerId', () => {
+      it('GET:200, returns an array of applications for a given jobseekerId', () => {
+        const jobseekerId = 'a06d34ae-fe1c-43ed-b29d-0c4b7777b300';
+        return request(app)
+          .get(`/applications/jobseeker/${jobseekerId}`)
+          .expect(200)
+          .then(({ body }) => {
+            assert.hasAllKeys(body, ['status', 'applications']);
+            assert.typeOf(body.applications, 'array');
+            body.applications.forEach((application) => {
+              assert.hasAllKeys(application, [
+                'applicationID',
+                'jobId',
+                'companyId',
+                'companyName',
+                'companyEmail',
+                'companyPhone',
+                'jobseekerId',
+                'applicationDate',
+                'closingDate',
+                'jobText',
+                'jobTitle',
+                'jobLocation',
+              ]);
+            });
+          });
+      });
+    });
   });
 });

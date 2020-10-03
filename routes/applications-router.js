@@ -3,11 +3,12 @@ const {
   postApplication,
   getApplicationsByJobId,
   getApplicationsByCompanyId,
+  getApplicationsByjobseekerId,
 } = require('../controllers/applications-controller');
 
 applicationsRouter.route('/').post(postApplication);
 applicationsRouter.route('/job/:jobId').get(getApplicationsByJobId);
 applicationsRouter.route('/company/:companyId').get(getApplicationsByCompanyId);
-// get applications by applicant
+applicationsRouter.route('/jobseeker/:jobseekerId').get(getApplicationsByjobseekerId);
 
 module.exports = applicationsRouter;

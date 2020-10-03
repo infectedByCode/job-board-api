@@ -2,6 +2,7 @@ const {
   insertApplication,
   selectApplicationsByJobId,
   selectApplicationsByCompanyId,
+  selectApplicationsByjobseekerId,
 } = require('../models/application-models');
 
 exports.postApplication = async (req, res, next) => {
@@ -40,6 +41,18 @@ exports.getApplicationsByCompanyId = async (req, res, next) => {
   res.status(200).json({
     status: 200,
     companyId,
+    applications: result,
+  });
+};
+
+exports.getApplicationsByjobseekerId = async (req, res, next) => {
+  const { jobseekerId } = req.params;
+  const result = await selectApplicationsByjobseekerId(jobseekerId);
+  if (result instanceof Error) {
+    return next(result);
+  }
+  res.status(200).json({
+    status: 200,
     applications: result,
   });
 };

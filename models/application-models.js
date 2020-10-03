@@ -65,3 +65,32 @@ exports.selectApplicationsByCompanyId = (companyId) => {
     .then(([rows]) => rows)
     .catch((err) => err);
 };
+
+exports.selectApplicationsByjobseekerId = (jobseekerId) => {
+  return db
+    .promise()
+    .query(
+      `
+      SELECT
+        a.jobseekerId,
+        a.applicationDate,
+        a.applicationID,
+        a.companyId,
+        c.companyEmail,
+        c.companyName,
+        c.companyPhone,
+        j.jobId,
+        j.jobLocation,
+        j.jobText,
+        j.jobTitle,
+        j.closingDate
+      FROM applications AS a
+        LEFT JOIN companies AS c ON a.companyId = c.companyId
+        LEFT JOIN jobs AS j on a.jobId = j.jobId
+        WHERE a.jobseekerId = ?;
+      `,
+      [jobseekerId]
+    )
+    .then(([rows]) => rows)
+    .catch((err) => err);
+};
