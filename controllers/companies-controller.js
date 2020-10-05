@@ -1,6 +1,6 @@
 const {
   selectCompanies,
-  createCompany,
+  insertCompany,
   selectCompanyById,
   updateCompanyById,
   deleteCompanyByIdQuery,
@@ -18,7 +18,7 @@ exports.getCompanies = async (req, res, next) => {
 };
 
 exports.postCompany = async (req, res, next) => {
-  const result = await createCompany(req.body);
+  const result = await insertCompany(req.body);
   if (result instanceof Error) {
     return next(result);
   }

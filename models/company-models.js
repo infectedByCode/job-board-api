@@ -9,7 +9,7 @@ exports.selectCompanies = () => {
     .catch((err) => err);
 };
 
-exports.createCompany = (data) => {
+exports.insertCompany = (data) => {
   const companyId = uuidv4();
   const { companyAddress, companyEmail, companyName, companyPhone } = data;
   return db
