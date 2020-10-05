@@ -32,7 +32,7 @@ exports.insertCompany = (data) => {
             companyPassword: hash,
           })
           .then(([rows]) => {
-            return rows.affectedRows === 1 ? result : throw new Error('error creating user');
+            return rows.affectedRows === 1 ? result : null;
           })
           .catch((err) => err);
       }
