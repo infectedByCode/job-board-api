@@ -198,6 +198,7 @@ describe('#app', () => {
         companyEmail: 'companyZ@email.com',
         companyName: 'Pizza-Z-a',
         companyPhone: '01234 687 900',
+        companyPassword: 'very-secure-password',
       };
       return request(app)
         .post('/companies')
