@@ -253,6 +253,8 @@ describe('#app', () => {
         jobseekerForename: 'Jack',
         jobseekerSurname: 'Jones',
         jobKeywords: 'developer,cleaner,office',
+        jobseekerEmail: 'needajob@email.com',
+        jobseekerPassword: 'super-safe-pw',
       };
       return request(app)
         .post('/jobseekers')
