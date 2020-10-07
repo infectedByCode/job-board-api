@@ -2,10 +2,11 @@ const express = require('express');
 const app = express();
 require('dotenv').config();
 // Routers
-const jobsRouter = require('./routes/jobs-router.js');
-const companiesRouter = require('./routes/companies-router.js');
-const jobSeekersRouter = require('./routes/jobseekers-router.js');
-const applicationsRouter = require('./routes/applications-router.js');
+const authRouter = require('./routes/auth-router');
+const jobsRouter = require('./routes/jobs-router');
+const companiesRouter = require('./routes/companies-router');
+const jobSeekersRouter = require('./routes/jobseekers-router');
+const applicationsRouter = require('./routes/applications-router');
 
 app.use(express.json());
 
@@ -18,6 +19,7 @@ app.all('/', (req, res, next) => {
 });
 // routes
 app.use('/jobs', jobsRouter);
+app.use('/auth', authRouter);
 app.use('/companies', companiesRouter);
 app.use('/jobseekers', jobSeekersRouter);
 app.use('/applications', applicationsRouter);

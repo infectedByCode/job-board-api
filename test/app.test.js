@@ -265,6 +265,29 @@ describe('#app', () => {
           addedJobSeekerId = body.ref;
         });
     });
+    // TODO: refactor so jobseeker is not deleted before login
+    describe('/auth', () => {
+      describe('/login', () => {
+        it('returns an jwt if the jobseeker successfully logs in', () => {
+          const data = {
+            password: 'super-safe-pw',
+            email: 'needajob@email.com',
+            userId: addedJobSeekerId,
+            role: 'jobseeker',
+          };
+          return request(app)
+            .post('/auth/login')
+            .send(data)
+            .expect(200)
+            .then(({ body }) => {
+              assert.typeOf(body, 'object');
+              assert.hasAllKeys(body, ['status', 'token', 'msg', 'userId']);
+              assert.typeOf(body.token, 'string');
+              assert.ok(body.userId === addedJobSeekerId);
+            });
+        });
+      });
+    });
     describe('/:jobSeekerId', () => {
       it('GET:200, selects jobseeker by their ID', () => {
         return request(app)
