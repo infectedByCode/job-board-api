@@ -71,5 +71,11 @@ exports.deleteCompanyById = async (req, res, next) => {
   if (result instanceof Error) {
     return next(result);
   }
+  if (result.affectedRows === 0) {
+    return res.status(404).json({
+      status: 404,
+      msg: `unable to delete company with ID ${companyId}`,
+    });
+  }
   return res.sendStatus(204);
 };

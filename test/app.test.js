@@ -380,6 +380,15 @@ describe('#app', () => {
             assert.ok(body.msg === `unable to update company with ID 1234`);
           });
       });
+      it('DELETE:404, returns an error if company ID is not found', () => {
+        return request(app)
+          .delete('/companies/1234')
+          .expect(404)
+          .then(({ body }) => {
+            assert.hasAllKeys(body, ['status', 'msg']);
+            assert.ok(body.msg === 'unable to delete company with ID 1234');
+          });
+      });
     });
   });
   describe('/jobseekers', () => {
