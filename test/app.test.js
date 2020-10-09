@@ -209,6 +209,29 @@ describe('#app', () => {
           addedCompanyId = body.ref;
         });
     });
+    // TODO: refactor so jobseeker is not deleted before login
+    describe('/auth', () => {
+      describe('/login', () => {
+        it('returns an jwt if the jobseeker successfully logs in', () => {
+          const data = {
+            password: 'very-secure-password',
+            email: 'companyZ@email.com',
+            userId: addedCompanyId,
+            role: 'company',
+          };
+          return request(app)
+            .post('/auth/login')
+            .send(data)
+            .expect(200)
+            .then(({ body }) => {
+              assert.typeOf(body, 'object');
+              assert.hasAllKeys(body, ['status', 'token', 'msg', 'userId']);
+              assert.typeOf(body.token, 'string');
+              assert.ok(body.userId === addedCompanyId);
+            });
+        });
+      });
+    });
     describe('/:companyId', () => {
       it('GET:200, returns a company by ID', () => {
         return request(app)
