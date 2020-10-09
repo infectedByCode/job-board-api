@@ -65,9 +65,9 @@ exports.getJobById = async (req, res, next) => {
     return next(result);
   }
   if (result.length === 0) {
-    return res.status(200).json({
-      status: 204,
-      msg: 'No content',
+    return res.status(404).json({
+      status: 404,
+      msg: `Unable to get job with ID ${jobId}`,
     });
   }
   return res.status(200).json({

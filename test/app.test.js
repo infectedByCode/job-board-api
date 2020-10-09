@@ -123,6 +123,16 @@ describe('#app', () => {
       it('DELETE:204, removes a job by ID', () => {
         return request(app).delete(`/jobs/${addedJobId}`).expect(204);
       });
+      it('GET:404, returns an error if jobId not found', () => {
+        return request(app)
+          .get('/jobs/1234')
+          .expect(404)
+          .then(({ body }) => {
+            assert.typeOf(body, 'object');
+            assert.hasAllKeys(body, ['status', 'msg']);
+            assert.ok(body.msg === 'Unable to get job with ID 1234');
+          });
+      });
     });
     describe('/search/:searchTerm', () => {
       it('returns an array of jobs matching the a single search keyword in the title or text', () => {
