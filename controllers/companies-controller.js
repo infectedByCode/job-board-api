@@ -35,6 +35,12 @@ exports.getCompanyById = async (req, res, next) => {
   if (result instanceof Error) {
     return next(result);
   }
+  if (result.length === 0) {
+    return res.status(400).json({
+      status: 4000,
+      msg: `unable to get company with ID ${companyId}`,
+    });
+  }
   return res.status(200).json({
     status: 200,
     company: result[0],

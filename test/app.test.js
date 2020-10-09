@@ -345,6 +345,15 @@ describe('#app', () => {
       it('DELETE:204, removes a company from database and associated jobs', () => {
         return request(app).delete(`/companies/${addedCompanyId}`).expect(204);
       });
+      it('GET:404, returns an error if company ID not valid', () => {
+        return request(app)
+          .get('/companies/1234')
+          .expect(400)
+          .then(({ body }) => {
+            assert.hasAllKeys(body, ['status', 'msg']);
+            assert.ok(body.msg === 'unable to get company with ID 1234');
+          });
+      });
     });
   });
   describe('/jobseekers', () => {
