@@ -163,6 +163,9 @@ describe('#app', () => {
             assert.ok(body.msg === 'Unable to update job with ID 1234');
           });
       });
+      it('DELETE:404, returns an error if job is not found', () => {
+        return request(app).delete(`/jobs/${addedJobId}`).expect(404);
+      });
     });
     describe('/search/:searchTerm', () => {
       it('returns an array of jobs matching the a single search keyword in the title or text', () => {

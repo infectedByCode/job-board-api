@@ -102,5 +102,13 @@ exports.deleteJobById = async (req, res, next) => {
   if (result instanceof Error) {
     return next(result);
   }
-  return res.sendStatus(204);
+  if (result.affectedRows === 0) {
+    return res.status(404).json({
+      status: 404,
+      msg: `Unable to delete job with ID ${jobId}`,
+    });
+  }
+  if (result.affectedRows === 1) {
+    return res.sendStatus(204);
+  }
 };
