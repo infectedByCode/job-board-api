@@ -168,7 +168,7 @@ describe('#app', () => {
       });
     });
     describe('/search/:searchTerm', () => {
-      it('returns an array of jobs matching the a single search keyword in the title or text', () => {
+      it('GET:200, returns an array of jobs matching the a single search keyword in the title or text', () => {
         return request(app)
           .get('/jobs/search/sample')
           .expect(200)
@@ -194,7 +194,7 @@ describe('#app', () => {
             });
           });
       });
-      it('returns an array of jobs matching the any of the given search keywords', () => {
+      it('GET:200, returns an array of jobs matching the any of the given search keywords', () => {
         return request(app)
           .get('/jobs/search/pot+sample')
           .expect(200)
@@ -222,9 +222,18 @@ describe('#app', () => {
             });
           });
       });
+      it('GET:200, returns an empty array if search term not found', () => {
+        return request(app)
+          .get('/jobs/search/areallyunlikelysearchtermtobefound')
+          .expect(200)
+          .then(({ body: { jobs } }) => {
+            assert.typeOf(jobs, 'array');
+            assert.ok(jobs.length === 0);
+          });
+      });
     });
     describe('/comapny/:companyId', () => {
-      it('returns an array of jobs for a given companyId', () => {
+      it('GET:200, returns an array of jobs for a given companyId', () => {
         const companyId = '8888-8888-8888-8888-8888-8888-888888';
         return request(app)
           .get(`/jobs/company/${companyId}`)
