@@ -276,6 +276,16 @@ describe('#app', () => {
           addedCompanyId = body.ref;
         });
     });
+    it('POST:400, returns an error if company data is missing or malformed', () => {
+      return request(app)
+        .post('/companies')
+        .send({})
+        .expect(400)
+        .then(({ body }) => {
+          assert.hasAllKeys(body, ['status', 'msg']);
+          assert.ok(body.msg === 'missing or malformed data');
+        });
+    });
     // TODO: refactor so jobseeker is not deleted before login
     describe('/auth', () => {
       describe('/login', () => {
