@@ -354,6 +354,32 @@ describe('#app', () => {
             assert.ok(body.msg === 'unable to get company with ID 1234');
           });
       });
+      it('PATCH:400, returns an error if data is missing or malformed', () => {
+        return request(app)
+          .patch(`/companies/${addedCompanyId}`)
+          .send({})
+          .expect(400)
+          .then(({ body }) => {
+            assert.hasAllKeys(body, ['status', 'msg']);
+            assert.ok(body.msg === 'missing or malformed data');
+          });
+      });
+      it('PATCH:404, returns an error if company ID is not found', () => {
+        const data = {
+          companyAddress: '888 Fortune Building',
+          companyEmail: 'fortune@email.com',
+          companyName: 'Fortune 888',
+          companyPhone: '0800 888 888',
+        };
+        return request(app)
+          .patch('/companies/1234')
+          .send(data)
+          .expect(404)
+          .then(({ body }) => {
+            assert.hasAllKeys(body, ['status', 'msg']);
+            assert.ok(body.msg === `unable to update company with ID 1234`);
+          });
+      });
     });
   });
   describe('/jobseekers', () => {

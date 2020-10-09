@@ -53,6 +53,12 @@ exports.patchCompanyById = async (req, res, next) => {
   if (result instanceof Error) {
     return next(result);
   }
+  if (result.affectedRows === 0) {
+    return res.status(404).json({
+      status: 404,
+      msg: `unable to update company with ID ${companyId}`,
+    });
+  }
   return res.status(200).json({
     status: 200,
     msg: `company ${companyId} updated successfully`,
