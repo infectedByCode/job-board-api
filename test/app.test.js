@@ -48,7 +48,7 @@ describe('#app', () => {
         jobText: 'require 200 years experience',
         salary: 9000,
         applyEmail: 'company@companyemail.com',
-        closingDate: '202,010-01',
+        closingDate: '2020-10-01',
         tags: 'developer,full-stack,nodejs',
         companyId: '8888-8888-8888-8888-8888-8888-888888',
       };
@@ -59,6 +59,21 @@ describe('#app', () => {
         .then(({ body }) => {
           assert.hasAllKeys(body, ['status', 'msg', 'ref']);
           addedJobId = body.ref;
+        });
+    });
+    it('POST:400, returns an error if required job data if missing', () => {
+      const jobData = {
+        jobTitle: 'developer',
+        jobText: 'require 200 years experience',
+        companyId: '8888-8888-8888-8888-8888-8888-888888',
+      };
+      return request(app)
+        .post('/jobs')
+        .send(jobData)
+        .expect(400)
+        .then(({ body }) => {
+          assert.hasAllKeys(body, ['status', 'msg']);
+          assert.ok(body.msg === 'missing or malformed data');
         });
     });
     describe('/:jobId', () => {

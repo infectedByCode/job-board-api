@@ -25,6 +25,12 @@ app.use('/jobseekers', jobSeekersRouter);
 app.use('/applications', applicationsRouter);
 // errors
 app.use((err, req, res, next) => {
+  if (err.errno) {
+    res.status(400).json({
+      status: 400,
+      msg: 'missing or malformed data',
+    });
+  }
   res.json({
     status: 500,
     msg: 'error',
