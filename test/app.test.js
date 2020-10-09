@@ -133,6 +133,36 @@ describe('#app', () => {
             assert.ok(body.msg === 'Unable to get job with ID 1234');
           });
       });
+      it('PATCH:400, returns an error is data is missing or malformed', () => {
+        return request(app)
+          .patch(`/jobs/${addedJobId}`)
+          .send({})
+          .expect(400)
+          .then(({ body }) => {
+            assert.hasAllKeys(body, ['status', 'msg']);
+            assert.ok(body.msg === 'missing or malformed data');
+          });
+      });
+      it('PATCH:404, returns an error if job is not found', () => {
+        const data = {
+          jobTitle: 'sample randomness',
+          jobText: 'none',
+          salary: 1,
+          applyEmail: 'email@email.com',
+          closingDate: '2020-10-01',
+          tags: 'developer,full-stack,nodejs',
+          companyId: '8888-8888-8888-8888-8888-8888-888888',
+          jobLocation: 'Manchester',
+        };
+        return request(app)
+          .patch('/jobs/1234')
+          .send(data)
+          .expect(404)
+          .then(({ body }) => {
+            assert.hasAllKeys(body, ['status', 'msg']);
+            assert.ok(body.msg === 'Unable to update job with ID 1234');
+          });
+      });
     });
     describe('/search/:searchTerm', () => {
       it('returns an array of jobs matching the a single search keyword in the title or text', () => {

@@ -82,6 +82,12 @@ exports.patchJobById = async (req, res, next) => {
   if (result instanceof Error) {
     return next(result);
   }
+  if (result.affectedRows === 0) {
+    return res.status(404).json({
+      status: 404,
+      msg: `Unable to update job with ID ${jobId}`,
+    });
+  }
   if (result.affectedRows === 1) {
     return res.status(200).json({
       status: 200,
