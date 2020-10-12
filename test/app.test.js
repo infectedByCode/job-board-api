@@ -289,7 +289,7 @@ describe('#app', () => {
     // TODO: refactor so jobseeker is not deleted before login
     describe('/auth', () => {
       describe('/login', () => {
-        it('returns an jwt if the jobseeker successfully logs in', () => {
+        it('GET:200, returns an jwt if the company successfully logs in', () => {
           const data = {
             password: 'very-secure-password',
             email: 'companyZ@email.com',
@@ -305,6 +305,23 @@ describe('#app', () => {
               assert.hasAllKeys(body, ['status', 'token', 'msg', 'userId']);
               assert.typeOf(body.token, 'string');
               assert.ok(body.userId === addedCompanyId);
+            });
+        });
+        it('GET: 401, returns an error if the company fails login', () => {
+          const data = {
+            password: 'not-my-very-secure-password',
+            email: 'companyZ@email.com',
+            userId: addedCompanyId,
+            role: 'company',
+          };
+          return request(app)
+            .post('/auth/login')
+            .send(data)
+            .expect(401)
+            .then(({ body }) => {
+              assert.typeOf(body, 'object');
+              assert.hasAllKeys(body, ['status', 'msg']);
+              assert.ok(body.msg === 'error with login');
             });
         });
       });
@@ -422,7 +439,7 @@ describe('#app', () => {
     // TODO: refactor so jobseeker is not deleted before login
     describe('/auth', () => {
       describe('/login', () => {
-        it('returns an jwt if the jobseeker successfully logs in', () => {
+        it('GET:200, returns an jwt if the jobseeker successfully logs in', () => {
           const data = {
             password: 'super-safe-pw',
             email: 'needajob@email.com',
@@ -438,6 +455,23 @@ describe('#app', () => {
               assert.hasAllKeys(body, ['status', 'token', 'msg', 'userId']);
               assert.typeOf(body.token, 'string');
               assert.ok(body.userId === addedJobSeekerId);
+            });
+        });
+        it('GET:401, returns an error if the jobseeker fails login', () => {
+          const data = {
+            password: 'not-a-super-safe-pw',
+            email: 'needajob@email.com',
+            userId: addedJobSeekerId,
+            role: 'jobseeker',
+          };
+          return request(app)
+            .post('/auth/login')
+            .send(data)
+            .expect(401)
+            .then(({ body }) => {
+              assert.typeOf(body, 'object');
+              assert.hasAllKeys(body, ['status', 'msg']);
+              assert.ok(body.msg === 'error with login');
             });
         });
       });

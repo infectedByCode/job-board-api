@@ -11,6 +11,9 @@ exports.loginUserQuery = (data) => {
     .promise()
     .query(`SELECT ${role}Id FROM ${table} WHERE ${role}Id = ? AND ${role}Password = ?;`, [userId, hash])
     .then(([rows]) => {
+      if (rows.length === 0) {
+        return rows;
+      }
       // TODO: tidy up code
       if (rows[0].jobseekerId === userId || rows[0].companyId === userId) {
         const token = jwt.sign({ userId }, jwtSecret, { expiresIn: '1h' });

@@ -6,6 +6,12 @@ exports.loginUser = async (req, res, next) => {
   if (result instanceof Error) {
     return next(result);
   }
+  if (result.length === 0 || !result.userId) {
+    return res.status(401).json({
+      status: 401,
+      msg: 'error with login',
+    });
+  }
   if (result.userId) {
     return res.status(200).json({
       status: 200,
