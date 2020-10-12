@@ -511,6 +511,15 @@ describe('#app', () => {
             assert.ok(body.msg === 'jobseeker with ID 1234 unable to be updated');
           });
       });
+      it('DELETE:204, deletes a jobseeker by their ID', () => {
+        return request(app)
+          .delete('/jobseekers/not-here')
+          .expect(404)
+          .then(({ body }) => {
+            assert.hasAllKeys(body, ['status', 'msg']);
+            assert.ok(body.msg === 'unable to delete jobseeker with ID not-here');
+          });
+      });
     });
   });
   describe('/applications', () => {

@@ -65,6 +65,12 @@ exports.deleteJobSeekerById = async (req, res, next) => {
   if (result instanceof Error) {
     return next(result);
   }
+  if (result.affectedRows === 0) {
+    return res.status(404).json({
+      status: 404,
+      msg: `unable to delete jobseeker with ID ${jobseekerId}`,
+    });
+  }
   if (result.affectedRows === 1) {
     res.sendStatus(204);
   }
