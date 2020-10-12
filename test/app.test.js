@@ -476,6 +476,14 @@ describe('#app', () => {
       it('DELETE:204, deletes a jobseeker by their ID', () => {
         return request(app).delete(`/jobseekers/${addedJobSeekerId}`).expect(204);
       });
+      it('GET:404, returns an error if jobseeker not found', () => {
+        return request(app)
+          .get('/jobseekers/1234')
+          .then(({ body }) => {
+            assert.hasAllKeys(body, ['status', 'msg']);
+            assert.ok(body.msg === 'jobseeker with ID 1234 not found');
+          });
+      });
     });
   });
   describe('/applications', () => {
