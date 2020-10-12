@@ -446,6 +446,7 @@ describe('#app', () => {
       it('GET:200, selects jobseeker by their ID', () => {
         return request(app)
           .get(`/jobseekers/${addedJobSeekerId}`)
+          .expect(200)
           .then(({ body }) => {
             assert.hasAllKeys(body, ['status', 'jobseeker']);
             assert.hasAllKeys(body.jobseeker, [
@@ -479,9 +480,35 @@ describe('#app', () => {
       it('GET:404, returns an error if jobseeker not found', () => {
         return request(app)
           .get('/jobseekers/1234')
+          .expect(404)
           .then(({ body }) => {
             assert.hasAllKeys(body, ['status', 'msg']);
             assert.ok(body.msg === 'jobseeker with ID 1234 not found');
+          });
+      });
+      it('PATCH:400, updates a jobseeker by their ID', () => {
+        return request(app)
+          .patch(`/jobseekers/${addedJobSeekerId}`)
+          .send({})
+          .expect(400)
+          .then(({ body }) => {
+            assert.hasAllKeys(body, ['status', 'msg']);
+            assert.ok(body.msg === `missing or malformed data`);
+          });
+      });
+      it('PATCH:404, updates a jobseeker by their ID', () => {
+        const data = {
+          jobseekerForename: 'Peter',
+          jobseekerSurname: 'Smith',
+          jobKeywords: 'developer,cleaner,office,nodejs',
+        };
+        return request(app)
+          .patch('/jobseekers/1234')
+          .send(data)
+          .expect(404)
+          .then(({ body }) => {
+            assert.hasAllKeys(body, ['status', 'msg']);
+            assert.ok(body.msg === 'jobseeker with ID 1234 unable to be updated');
           });
       });
     });

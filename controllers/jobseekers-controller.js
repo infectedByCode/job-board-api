@@ -25,10 +25,18 @@ exports.getJobSeekerById = async (req, res, next) => {
   if (result instanceof Error) {
     return next(result);
   }
-  res.status(200).json({
-    status: 200,
-    jobseeker: result[0],
-  });
+  if (result.length === 0) {
+    return res.status(404).json({
+      status: 404,
+      msg: `jobseeker with ID ${jobseekerId} not found`,
+    });
+  }
+  if (result.length === 1) {
+    return res.status(200).json({
+      status: 200,
+      jobseeker: result[0],
+    });
+  }
 };
 
 exports.patchJobSeekerById = async (req, res, next) => {
@@ -36,6 +44,12 @@ exports.patchJobSeekerById = async (req, res, next) => {
   const result = await updateJobSeekerById(jobseekerId, req.body);
   if (result instanceof Error) {
     return next(result);
+  }
+  if (result.affectedRows === 0) {
+    return res.status(404).json({
+      status: 404,
+      msg: `jobseeker with ID ${jobseekerId} unable to be updated`,
+    });
   }
   if (result.affectedRows === 1) {
     res.status(200).json({
