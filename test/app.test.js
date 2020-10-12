@@ -409,6 +409,16 @@ describe('#app', () => {
           addedJobSeekerId = body.ref;
         });
     });
+    it('POST:400, returns an error if jobseeker data missing or malformed', () => {
+      return request(app)
+        .post('/jobseekers')
+        .send({})
+        .expect(400)
+        .then(({ body }) => {
+          assert.hasAllKeys(body, ['status', 'msg']);
+          assert.ok(body.msg === 'missing or malformed data');
+        });
+    });
     // TODO: refactor so jobseeker is not deleted before login
     describe('/auth', () => {
       describe('/login', () => {
