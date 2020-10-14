@@ -1,20 +1,36 @@
 process.env.NODE_ENV = 'test';
 
-const { exec } = require('child_process');
+const mysql = require('mysql2');
+require('dotenv').config();
 
-const app = require('../app');
-const db = require('../db/connection');
-
-const { assert } = require('chai');
-const request = require('supertest');
-const agent = request.agent(app);
+let app;
+let auth;
+const db = mysql.createConnection({
+  host: process.env.DB_HOST,
+  database: process.env.NODE_ENV === 'test' ? process.env.DB_TEST : process.env.DB_NAME,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+});
 let addedJobId;
 let addedCompanyId;
 let addedJobSeekerId;
+
+const { assert } = require('chai');
+const request = require('supertest');
+const sinon = require('sinon');
+const agent = request.agent(app);
+
 describe('#app', () => {
   // TODO: reset all db
-  beforeEach(() => {});
-  after(() => db.end());
+  beforeEach(() => {
+    auth = require('../models/auth-models');
+    sinon.stub(auth, 'checkAuth').returns(true);
+    app = require('../app');
+  });
+  afterEach(() => {
+    sinon.restore();
+  });
+  after(async () => await db.end());
   describe('/jobs', () => {
     it('GET:200, returns an array of jobs with correct keys', () => {
       return request(app)
@@ -232,11 +248,11 @@ describe('#app', () => {
           });
       });
     });
-    describe('/comapny/:companyId', () => {
+    describe('/company/:companyId', () => {
       it('GET:200, returns an array of jobs for a given companyId', () => {
         const companyId = '8888-8888-8888-8888-8888-8888-888888';
         return request(app)
-          .get(`/jobs/company/${companyId}`)
+          .get(`/jobs/company/${companyId}?token=foo`)
           .expect(200)
           .then(({ body: { jobs } }) => {
             assert.typeOf(jobs, 'array');
@@ -329,7 +345,7 @@ describe('#app', () => {
     describe('/:companyId', () => {
       it('GET:200, returns a company by ID', () => {
         return request(app)
-          .get(`/companies/${addedCompanyId}`)
+          .get(`/companies/${addedCompanyId}?token=foo`)
           .expect(200)
           .then(({ body }) => {
             assert.hasAllKeys(body, ['status', 'company']);
@@ -351,7 +367,7 @@ describe('#app', () => {
           companyPhone: '0800 888 888',
         };
         return request(app)
-          .patch(`/companies/${addedCompanyId}`)
+          .patch(`/companies/${addedCompanyId}?token=foo`)
           .send(data)
           .expect(200)
           .then(({ body }) => {
@@ -360,11 +376,11 @@ describe('#app', () => {
           });
       });
       it('DELETE:204, removes a company from database and associated jobs', () => {
-        return request(app).delete(`/companies/${addedCompanyId}`).expect(204);
+        return request(app).delete(`/companies/${addedCompanyId}?token=foo`).expect(204);
       });
       it('GET:404, returns an error if company ID not valid', () => {
         return request(app)
-          .get('/companies/1234')
+          .get('/companies/1234?token=foo')
           .expect(400)
           .then(({ body }) => {
             assert.hasAllKeys(body, ['status', 'msg']);
@@ -373,7 +389,7 @@ describe('#app', () => {
       });
       it('PATCH:400, returns an error if data is missing or malformed', () => {
         return request(app)
-          .patch(`/companies/${addedCompanyId}`)
+          .patch(`/companies/${addedCompanyId}?token=foo`)
           .send({})
           .expect(400)
           .then(({ body }) => {
@@ -389,7 +405,7 @@ describe('#app', () => {
           companyPhone: '0800 888 888',
         };
         return request(app)
-          .patch('/companies/1234')
+          .patch('/companies/1234?token=foo')
           .send(data)
           .expect(404)
           .then(({ body }) => {
@@ -399,7 +415,7 @@ describe('#app', () => {
       });
       it('DELETE:404, returns an error if company ID is not found', () => {
         return request(app)
-          .delete('/companies/1234')
+          .delete('/companies/1234?token=foo')
           .expect(404)
           .then(({ body }) => {
             assert.hasAllKeys(body, ['status', 'msg']);
@@ -479,7 +495,7 @@ describe('#app', () => {
     describe('/:jobSeekerId', () => {
       it('GET:200, selects jobseeker by their ID', () => {
         return request(app)
-          .get(`/jobseekers/${addedJobSeekerId}`)
+          .get(`/jobseekers/${addedJobSeekerId}?token=foo`)
           .expect(200)
           .then(({ body }) => {
             assert.hasAllKeys(body, ['status', 'jobseeker']);
@@ -500,7 +516,7 @@ describe('#app', () => {
           jobKeywords: 'developer,cleaner,office,nodejs',
         };
         return request(app)
-          .patch(`/jobseekers/${addedJobSeekerId}`)
+          .patch(`/jobseekers/${addedJobSeekerId}?token=foo`)
           .send(data)
           .expect(200)
           .then(({ body }) => {
@@ -509,11 +525,11 @@ describe('#app', () => {
           });
       });
       it('DELETE:204, deletes a jobseeker by their ID', () => {
-        return request(app).delete(`/jobseekers/${addedJobSeekerId}`).expect(204);
+        return request(app).delete(`/jobseekers/${addedJobSeekerId}?token=foo`).expect(204);
       });
       it('GET:404, returns an error if jobseeker not found', () => {
         return request(app)
-          .get('/jobseekers/1234')
+          .get('/jobseekers/1234?token=foo')
           .expect(404)
           .then(({ body }) => {
             assert.hasAllKeys(body, ['status', 'msg']);
@@ -522,7 +538,7 @@ describe('#app', () => {
       });
       it('PATCH:400, updates a jobseeker by their ID', () => {
         return request(app)
-          .patch(`/jobseekers/${addedJobSeekerId}`)
+          .patch(`/jobseekers/${addedJobSeekerId}?token=foo`)
           .send({})
           .expect(400)
           .then(({ body }) => {
@@ -537,7 +553,7 @@ describe('#app', () => {
           jobKeywords: 'developer,cleaner,office,nodejs',
         };
         return request(app)
-          .patch('/jobseekers/1234')
+          .patch('/jobseekers/1234?token=foo')
           .send(data)
           .expect(404)
           .then(({ body }) => {
@@ -547,7 +563,7 @@ describe('#app', () => {
       });
       it('DELETE:204, deletes a jobseeker by their ID', () => {
         return request(app)
-          .delete('/jobseekers/not-here')
+          .delete('/jobseekers/not-here?token=foo')
           .expect(404)
           .then(({ body }) => {
             assert.hasAllKeys(body, ['status', 'msg']);
@@ -575,7 +591,7 @@ describe('#app', () => {
       it('GET:200, returns an array of applications for a given jobId', () => {
         const jobId = '3dfb5aa8-43de-47ff-ab17-3db14a8c046a';
         return request(app)
-          .get(`/applications/job/${jobId}`)
+          .get(`/applications/job/${jobId}?token=foo`)
           .expect(200)
           .then(({ body }) => {
             assert.hasAllKeys(body, ['status', 'applications']);
@@ -601,7 +617,7 @@ describe('#app', () => {
       it('GET:200, returns an array of applications for a given companyId', () => {
         const companyId = '57f0715c-1084-46b8-b976-e4ac2aae4576';
         return request(app)
-          .get(`/applications/company/${companyId}`)
+          .get(`/applications/company/${companyId}?token=foo`)
           .expect(200)
           .then(({ body }) => {
             assert.hasAllKeys(body, ['status', 'applications', 'companyId']);
@@ -627,7 +643,7 @@ describe('#app', () => {
       it('GET:200, returns an array of applications for a given jobseekerId', () => {
         const jobseekerId = 'a06d34ae-fe1c-43ed-b29d-0c4b7777b300';
         return request(app)
-          .get(`/applications/jobseeker/${jobseekerId}`)
+          .get(`/applications/jobseeker/${jobseekerId}?token=foo`)
           .expect(200)
           .then(({ body }) => {
             assert.hasAllKeys(body, ['status', 'applications']);

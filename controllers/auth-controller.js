@@ -30,7 +30,6 @@ exports.authUser = async (req, res, next) => {
     return res.sendStatus(403);
   }
   const result = await checkAuth(token, userId);
-  console.log('<>>>>>>>>>>>>>', token, jobseekerId, result);
   if (result instanceof Error) {
     return next(result);
   }
