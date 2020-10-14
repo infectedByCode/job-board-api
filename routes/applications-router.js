@@ -1,4 +1,5 @@
 const applicationsRouter = require('express').Router();
+const { authUser } = require('../controllers/auth-controller');
 const {
   postApplication,
   getApplicationsByJobId,
@@ -7,8 +8,8 @@ const {
 } = require('../controllers/applications-controller');
 
 applicationsRouter.route('/').post(postApplication);
-applicationsRouter.route('/job/:jobId').get(getApplicationsByJobId);
-applicationsRouter.route('/company/:companyId').get(getApplicationsByCompanyId);
-applicationsRouter.route('/jobseeker/:jobseekerId').get(getApplicationsByjobseekerId);
+applicationsRouter.route('/job/:jobId').get(authUser, getApplicationsByJobId);
+applicationsRouter.route('/company/:companyId').get(authUser, getApplicationsByCompanyId);
+applicationsRouter.route('/jobseeker/:jobseekerId').get(authUser, getApplicationsByjobseekerId);
 
 module.exports = applicationsRouter;

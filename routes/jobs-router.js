@@ -1,4 +1,5 @@
 const jobsRouter = require('express').Router();
+const { authUser } = require('../controllers/auth-controller');
 const {
   getJobs,
   postJob,
@@ -11,7 +12,7 @@ const {
 
 jobsRouter.route('/').get(getJobs).post(postJob);
 jobsRouter.route('/:jobId').get(getJobById).patch(patchJobById).delete(deleteJobById);
-jobsRouter.get('/search/:searchTerm', getJobsByTerm);
-jobsRouter.get('/company/:companyId', getJobsByCompanyId);
+jobsRouter.route('/search/:searchTerm').get(getJobsByTerm);
+jobsRouter.route('/company/:companyId').get(authUser, getJobsByCompanyId);
 
 module.exports = jobsRouter;

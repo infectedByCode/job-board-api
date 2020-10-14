@@ -1,4 +1,4 @@
-const { loginUserQuery } = require('../models/auth-models');
+const { loginUserQuery, checkAuth } = require('../models/auth-models');
 
 exports.loginUser = async (req, res, next) => {
   const data = req.body;
@@ -19,5 +19,25 @@ exports.loginUser = async (req, res, next) => {
       token: result.token,
       msg: `user successfully logged in`,
     });
+  }
+};
+
+exports.authUser = async (req, res, next) => {
+  const { token } = req.query;
+  const { jobseekerId, companyId } = req.params;
+  const userId = jobseekerId || companyId;
+  if (!token) {
+    return res.sendStatus(403);
+  }
+  const result = await checkAuth(token, userId);
+  console.log('<>>>>>>>>>>>>>', token, jobseekerId, result);
+  if (result instanceof Error) {
+    return next(result);
+  }
+  if (!result) {
+    return res.sendStatus(403);
+  }
+  if (result) {
+    next();
   }
 };
