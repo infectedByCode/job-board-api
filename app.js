@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const app = express();
 require('dotenv').config();
 // Routers
@@ -8,6 +9,7 @@ const companiesRouter = require('./routes/companies-router');
 const jobSeekersRouter = require('./routes/jobseekers-router');
 const applicationsRouter = require('./routes/applications-router');
 
+app.use(cors());
 app.use(express.json());
 
 // health checker
