@@ -5,12 +5,8 @@ require('dotenv').config();
 
 let app;
 let auth;
-const db = mysql.createConnection({
-  host: process.env.DB_HOST,
-  database: process.env.NODE_ENV === 'test' ? process.env.DB_TEST : process.env.DB_NAME,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-});
+const db = require('../db/connection');
+
 let addedJobId;
 let addedCompanyId;
 let addedJobSeekerId;
@@ -30,7 +26,7 @@ describe('#app', () => {
   afterEach(() => {
     sinon.restore();
   });
-  after(async () => await db.end());
+  after(() => db.end());
   describe('/jobs', () => {
     it('GET:200, returns an array of jobs with correct keys', () => {
       return request(app)
