@@ -1,6 +1,6 @@
 const db = require('../db/connection');
 const { v4: uuidv4 } = require('uuid');
-const encrypt = require('crypto-js/sha256');
+const crypto = require('crypto-js').AES;
 
 exports.selectCompanies = () => {
   return db
@@ -13,7 +13,7 @@ exports.selectCompanies = () => {
 exports.insertCompany = (data) => {
   const companyId = uuidv4();
   const { companyAddress, companyEmail, companyName, companyPhone, companyPassword } = data;
-  const hash = String(encrypt(companyPassword));
+  const hash = String(crypto.encrypt(companyPassword, process.env.HASH_SECRET));
   return db
     .promise()
     .query('INSERT INTO companies SET ?;', { companyId, companyName, companyAddress, companyEmail, companyPhone })

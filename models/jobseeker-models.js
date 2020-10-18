@@ -1,11 +1,11 @@
 const db = require('../db/connection');
 const { v4: uuidv4 } = require('uuid');
-const encrypt = require('crypto-js/sha256');
+const crypto = require('crypto-js').AES;
 
 exports.insertJobSeeker = (data) => {
   const jobSeekerId = uuidv4();
   const { jobseekerForename, jobseekerSurname, jobKeywords, jobseekerPassword, jobseekerEmail } = data;
-  const hash = String(encrypt(jobseekerPassword));
+  const hash = String(crypto.encrypt(jobseekerPassword, process.env.HASH_SECRET));
   return db
     .promise()
     .query('INSERT INTO jobseekers SET ?;', { jobSeekerId, jobseekerForename, jobseekerSurname, jobKeywords })
