@@ -17,7 +17,6 @@ exports.loginUserQuery = (data) => {
       if (rows[0].userId === userId && password === pw) {
         const token = jwt.sign({ userId }, jwtSecret, { expiresIn: '1m' });
         rows[0].token = token;
-        console.log(token);
         return rows[0];
       } else {
         return [];

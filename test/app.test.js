@@ -481,7 +481,6 @@ describe('#app', () => {
             .send(data)
             .expect(401)
             .then(({ body }) => {
-              console.log(body);
               assert.typeOf(body, 'object');
               assert.hasAllKeys(body, ['status', 'msg']);
               assert.ok(body.msg === 'error with login');
