@@ -33,7 +33,7 @@ app.use((err, req, res, next) => {
       msg: 'missing or malformed data',
     });
   }
-  res.json({
+  res.status(500).json({
     status: 500,
     msg: 'error',
   });
