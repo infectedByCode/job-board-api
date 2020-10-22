@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 
 exports.insertJobSeeker = (data) => {
   const jobSeekerId = uuidv4();
-  const { jobseekerForename, jobseekerSurname, jobKeywords, password, jobseekerEmail } = data;
+  const { jobseekerForename, jobseekerSurname, jobKeywords, password, email } = data;
   if (typeof password === 'undefined') return;
   const hash = bcrypt.hashSync(password, 15);
   return db
@@ -21,7 +21,7 @@ exports.insertJobSeeker = (data) => {
           .query('INSERT INTO jobseekersLogin SET ?;', {
             jobseekerId: result.jobSeekerId,
             jobseekerPassword: hash,
-            jobseekerEmail,
+            jobseekerEmail: email,
           })
           .then(([dbResult]) => {
             return dbResult.affectedRows === 1 ? result : null;

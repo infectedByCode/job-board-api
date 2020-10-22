@@ -8,13 +8,16 @@ exports.loginUserQuery = (data) => {
   const table = role === 'jobseeker' ? 'jobseekersLogin' : 'companiesLogin';
   return db
     .promise()
-    .query(`SELECT ${role}Id AS userId, ${role}Password AS hash FROM ${table} WHERE ${role}Id = ?;`, [userId])
+    .query(
+      `SELECT ${role}Id AS userId, ${role}Password AS hash FROM ${table} WHERE ${role}Id = ? OR ${role}Email = ?;`,
+      [userId, email]
+    )
     .then(([rows]) => {
       if (rows.length === 0) {
         return rows;
       }
       const isMatch = bcrypt.compareSync(password, rows[0].hash);
-      if (rows[0].userId === userId && isMatch) {
+      if (isMatch) {
         const token = jwt.sign({ userId }, jwtSecret, { expiresIn: '1m' });
         rows[0].token = token;
         return rows[0];

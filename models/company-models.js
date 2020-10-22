@@ -12,12 +12,18 @@ exports.selectCompanies = () => {
 
 exports.insertCompany = (data) => {
   const companyId = uuidv4();
-  const { companyAddress, companyEmail, companyName, companyPhone, password } = data;
+  const { companyAddress, email, companyName, companyPhone, password } = data;
   if (typeof password === 'undefined') return;
   const hash = bcrypt.hashSync(password, 15);
   return db
     .promise()
-    .query('INSERT INTO companies SET ?;', { companyId, companyName, companyAddress, companyEmail, companyPhone })
+    .query('INSERT INTO companies SET ?;', {
+      companyId,
+      companyName,
+      companyAddress,
+      companyEmail: email,
+      companyPhone,
+    })
     .then(([result]) => {
       result.companyId = companyId;
       return result;
@@ -29,7 +35,7 @@ exports.insertCompany = (data) => {
           .promise()
           .query('INSERT INTO companiesLogin SET ?;', {
             companyId: result.companyId,
-            companyEmail,
+            companyEmail: email,
             companyPassword: hash,
           })
           .then(([rows]) => {
