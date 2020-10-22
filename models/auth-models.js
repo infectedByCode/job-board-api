@@ -1,6 +1,6 @@
 const db = require('../db/connection');
 const jwt = require('jsonwebtoken');
-const crypto = require('crypto-js');
+const bcrypt = require('bcrypt');
 const { jwtSecret } = require('../config').createConfig();
 
 exports.loginUserQuery = (data) => {
@@ -13,8 +13,8 @@ exports.loginUserQuery = (data) => {
       if (rows.length === 0) {
         return rows;
       }
-      const pw = crypto.AES.decrypt(rows[0].hash, process.env.HASH_SECRET).toString(crypto.enc.Utf8);
-      if (rows[0].userId === userId && password === pw) {
+      const isMatch = bcrypt.compareSync(password, rows[0].hash);
+      if (rows[0].userId === userId && isMatch) {
         const token = jwt.sign({ userId }, jwtSecret, { expiresIn: '1m' });
         rows[0].token = token;
         return rows[0];

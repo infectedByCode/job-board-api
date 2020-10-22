@@ -1,6 +1,6 @@
 const db = require('../db/connection');
 const { v4: uuidv4 } = require('uuid');
-const crypto = require('crypto-js').AES;
+const bcrypt = require('bcrypt');
 
 exports.selectCompanies = () => {
   return db
@@ -12,8 +12,9 @@ exports.selectCompanies = () => {
 
 exports.insertCompany = (data) => {
   const companyId = uuidv4();
-  const { companyAddress, companyEmail, companyName, companyPhone, companyPassword } = data;
-  const hash = String(crypto.encrypt(companyPassword, process.env.HASH_SECRET));
+  const { companyAddress, companyEmail, companyName, companyPhone, password } = data;
+  if (typeof password === 'undefined') return;
+  const hash = bcrypt.hashSync(password, 15);
   return db
     .promise()
     .query('INSERT INTO companies SET ?;', { companyId, companyName, companyAddress, companyEmail, companyPhone })

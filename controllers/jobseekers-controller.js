@@ -10,8 +10,13 @@ exports.postJobSeeker = async (req, res, next) => {
   if (result instanceof Error) {
     return next(result);
   }
+  if (typeof result === 'undefined')
+    return res.status(400).json({
+      status: 400,
+      msg: 'missing or malformed data',
+    });
   if (result.affectedRows === 1) {
-    res.status(201).json({
+    return res.status(201).json({
       status: 201,
       msg: 'jobseeker created',
       ref: result.jobSeekerId,
@@ -52,7 +57,7 @@ exports.patchJobSeekerById = async (req, res, next) => {
     });
   }
   if (result.affectedRows === 1) {
-    res.status(200).json({
+    return res.status(200).json({
       status: 200,
       msg: `jobseeker ${jobseekerId} successfully updated`,
     });
@@ -72,6 +77,6 @@ exports.deleteJobSeekerById = async (req, res, next) => {
     });
   }
   if (result.affectedRows === 1) {
-    res.sendStatus(204);
+    return res.sendStatus(204);
   }
 };

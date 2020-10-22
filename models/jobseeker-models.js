@@ -1,11 +1,12 @@
 const db = require('../db/connection');
 const { v4: uuidv4 } = require('uuid');
-const crypto = require('crypto-js').AES;
+const bcrypt = require('bcrypt');
 
 exports.insertJobSeeker = (data) => {
   const jobSeekerId = uuidv4();
-  const { jobseekerForename, jobseekerSurname, jobKeywords, jobseekerPassword, jobseekerEmail } = data;
-  const hash = String(crypto.encrypt(jobseekerPassword, process.env.HASH_SECRET));
+  const { jobseekerForename, jobseekerSurname, jobKeywords, password, jobseekerEmail } = data;
+  if (typeof password === 'undefined') return;
+  const hash = bcrypt.hashSync(password, 15);
   return db
     .promise()
     .query('INSERT INTO jobseekers SET ?;', { jobSeekerId, jobseekerForename, jobseekerSurname, jobKeywords })

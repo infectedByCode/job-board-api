@@ -22,6 +22,12 @@ exports.postCompany = async (req, res, next) => {
   if (result instanceof Error) {
     return next(result);
   }
+  if (typeof result === 'undefined') {
+    return res.status(400).json({
+      status: 400,
+      msg: 'missing or malformed data',
+    });
+  }
   return res.status(201).json({
     status: 201,
     msg: 'Company successfully created',
