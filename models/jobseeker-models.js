@@ -41,6 +41,12 @@ exports.selectJobSeekerById = (jobSeekerId) => {
 };
 
 exports.updateJobSeekerById = (jobSeekerId, data) => {
+  if (data.accountCreated) {
+    delete data.accountCreated;
+  }
+  if (data.jobSeekerId) {
+    delete data.jobSeekerId;
+  }
   return db
     .promise()
     .query('UPDATE jobseekers SET ? WHERE jobseekerId = ?;', [data, jobSeekerId])

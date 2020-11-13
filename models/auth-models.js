@@ -18,7 +18,7 @@ exports.loginUserQuery = (data) => {
       }
       const isMatch = bcrypt.compareSync(password, rows[0].hash);
       if (isMatch) {
-        const token = jwt.sign({ userId }, jwtSecret, { expiresIn: '1m' });
+        const token = jwt.sign({ userId }, jwtSecret, { expiresIn: '30m' });
         rows[0].token = token;
         return rows[0];
       } else {
@@ -33,6 +33,6 @@ exports.checkAuth = (token, userId) => {
     if (err || !decodedToken) {
       return false;
     }
-    return decodedToken.userId === userId;
+    return true;
   });
 };

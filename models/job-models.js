@@ -16,10 +16,20 @@ exports.selectJobs = () => {
 
 exports.insertJob = (body) => {
   const jobId = uuidv4();
-  const { jobTitle, jobText, salary, applyEmail, closingDate, tags, companyId } = body;
+  const { jobTitle, jobLocation, jobText, salary, applyEmail, closingDate, tags, companyId } = body;
   return db
     .promise()
-    .query('INSERT INTO jobs SET ?;', { jobId, jobTitle, jobText, salary, applyEmail, closingDate, tags, companyId })
+    .query('INSERT INTO jobs SET ?;', {
+      jobId,
+      jobTitle,
+      jobLocation,
+      jobText,
+      salary,
+      applyEmail,
+      closingDate,
+      tags,
+      companyId,
+    })
     .then(([result]) => {
       result.jobId = jobId;
       return result;
