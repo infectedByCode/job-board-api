@@ -4,7 +4,11 @@ jobs:
   commit-checks:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-      - run: npm install
-      - run: npm test
+      - name: Checkout
+        - uses: actions/checkout@v2
+      - name: Setup Node
+        - uses: actions/setup-node@v1
+      - name: Install NPM
+        - run: npm install
+      - name: Test
+        - run: npm test
