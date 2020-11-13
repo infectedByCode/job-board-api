@@ -274,10 +274,10 @@ describe('#app', () => {
     it('POST:201, creates a new company', () => {
       const companyData = {
         companyAddress: 'Pizza Shop',
-        companyEmail: 'companyZ@email.com',
+        email: 'companyZ@email.com',
         companyName: 'Pizza-Z-a',
         companyPhone: '01234 687 900',
-        companyPassword: 'very-secure-password',
+        password: 'very-secure-password',
       };
       return request(app)
         .post('/companies')
@@ -426,8 +426,8 @@ describe('#app', () => {
         jobseekerForename: 'Jack',
         jobseekerSurname: 'Jones',
         jobKeywords: 'developer,cleaner,office',
-        jobseekerEmail: 'needajob@email.com',
-        jobseekerPassword: 'super-safe-pw',
+        email: 'needajob@email.com',
+        password: 'super-safe-pw',
       };
       return request(app)
         .post('/jobseekers')
