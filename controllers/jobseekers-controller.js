@@ -20,6 +20,7 @@ exports.postJobSeeker = async (req, res, next) => {
       status: 201,
       msg: 'jobseeker created',
       ref: result.jobSeekerId,
+      token: result.token,
     });
   }
 };

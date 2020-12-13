@@ -284,7 +284,7 @@ describe('#app', () => {
         .send(companyData)
         .expect(201)
         .then(({ body }) => {
-          assert.hasAllKeys(body, ['status', 'msg', 'ref']);
+          assert.hasAllKeys(body, ['status', 'msg', 'ref', 'token']);
           addedCompanyId = body.ref;
         });
     });
@@ -434,7 +434,7 @@ describe('#app', () => {
         .send(data)
         .expect(201)
         .then(({ body }) => {
-          assert.hasAllKeys(body, ['status', 'msg', 'ref']);
+          assert.hasAllKeys(body, ['status', 'msg', 'ref', 'token']);
           addedJobSeekerId = body.ref;
         });
     });

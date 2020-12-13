@@ -1,6 +1,8 @@
 const db = require('../db/connection');
 const { v4: uuidv4 } = require('uuid');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const { jwtSecret } = require('../config').createConfig();
 
 exports.selectCompanies = () => {
   return db
@@ -39,6 +41,8 @@ exports.insertCompany = (data) => {
             companyPassword: hash,
           })
           .then(([rows]) => {
+            const token = jwt.sign({ companyId }, jwtSecret, { expiresIn: '30m' });
+            result.token = token;
             return rows.affectedRows === 1 ? result : null;
           })
           .catch((err) => err);

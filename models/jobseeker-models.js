@@ -1,6 +1,8 @@
 const db = require('../db/connection');
 const { v4: uuidv4 } = require('uuid');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const { jwtSecret } = require('../config').createConfig();
 
 exports.insertJobSeeker = (data) => {
   const jobSeekerId = uuidv4();
@@ -24,6 +26,8 @@ exports.insertJobSeeker = (data) => {
             jobseekerEmail: email,
           })
           .then(([dbResult]) => {
+            const token = jwt.sign({ jobSeekerId }, jwtSecret, { expiresIn: '30m' });
+            result.token = token;
             return dbResult.affectedRows === 1 ? result : null;
           })
           .catch((err) => err);

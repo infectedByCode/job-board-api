@@ -32,6 +32,7 @@ exports.postCompany = async (req, res, next) => {
     status: 201,
     msg: 'Company successfully created',
     ref: result.companyId,
+    token: result.token,
   });
 };
 
