@@ -2,6 +2,9 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 require('dotenv').config();
+const swaggerUi = require('swagger-ui-express');
+const YAML = require('yamljs');
+const swaggerDocument = YAML.load('./swagger.yaml');
 // Routers
 const authRouter = require('./routes/auth-router');
 const jobsRouter = require('./routes/jobs-router');
@@ -25,6 +28,7 @@ app.use('/auth', authRouter);
 app.use('/companies', companiesRouter);
 app.use('/jobseekers', jobSeekersRouter);
 app.use('/applications', applicationsRouter);
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 // errors
 app.use((err, req, res, next) => {
   if (err.errno) {
